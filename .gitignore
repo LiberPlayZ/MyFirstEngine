@@ -1,0 +1,55 @@
+# ---------------------------------------------------------
+# Build outputs
+# ---------------------------------------------------------
+build/
+build-debug/
+build-release/
+out/
+bin/
+lib/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Compiled objects
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.exe
+
+# Logs
+*.log
+
+# Generated configuration
+compile_commands.json
+
+# Editor and IDE configs
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Backup files
+*~
