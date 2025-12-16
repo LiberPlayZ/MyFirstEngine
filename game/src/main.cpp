@@ -1,13 +1,10 @@
 #include <engine/Engine.h>
-
-#include <iostream>
+#include <engine/Log.h>
 
 int main() {
-    std::cout << "[Game] Starting up..." << std::endl;
-
+    engine::LogInfo("Game starting up...");
     engine::Engine engine;
     engine.Run();
-
-    std::cout << "[Game] Exiting." << std::endl;
+    engine::LogInfo("Game exiting.");
     return 0;
 }

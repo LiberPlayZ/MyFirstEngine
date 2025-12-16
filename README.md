@@ -63,6 +63,32 @@ from both layers.
 
 ------------------------------------------------------------------------
 
+## 🧾 Logging
+
+The engine exposes a tiny logging helper in `engine::Log.h`. Use
+`engine::LogInfo/LogWarning/LogError` anywhere in engine or game code to
+emit timestamped messages. All console output in the sample now goes
+through this helper so you can later swap the backend (write to files,
+forward to an editor, etc.) without changing call sites.
+
+Example:
+
+``` cpp
+#include <engine/Log.h>
+
+void Foo() {
+    engine::LogInfo("Something happened");
+    engine::LogWarning("Something suspicious happened");
+    engine::LogError("Something bad happened");
+}
+```
+
+The current implementation prints to `std::cout`, but its single
+`engine::Log` function is the only place that would need changes when you
+upgrade it (e.g., add levels, colors, or log files).
+
+------------------------------------------------------------------------
+
 ## 📌 Requirements
 
 -   C++20 compiler\

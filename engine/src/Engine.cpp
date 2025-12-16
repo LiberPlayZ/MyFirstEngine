@@ -1,7 +1,9 @@
 #include "engine/Engine.h"
 
+#include "engine/Log.h"
+
 #include <chrono>
-#include <iostream>
+#include <string>
 #include <thread>
 
 namespace engine {
@@ -24,17 +26,17 @@ void Engine::Run() {
 void Engine::Initialize() {
     m_isRunning = true;
     m_frameCount = 0;
-    std::cout << "[Engine] Initialized" << std::endl;
+    LogInfo("Engine initialized");
 }
 
 void Engine::Shutdown() {
     m_isRunning = false;
-    std::cout << "[Engine] Shutdown after " << m_frameCount << " frames" << std::endl;
+    LogInfo("Engine shutdown after " + std::to_string(m_frameCount) + " frames");
 }
 
 void Engine::ProcessFrame() {
     ++m_frameCount;
-    std::cout << "[Engine] Frame " << m_frameCount << std::endl;
+    LogInfo("Processing frame " + std::to_string(m_frameCount));
 }
 
 }  // namespace engine

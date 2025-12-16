@@ -1,6 +1,8 @@
 add_library(MyEngine STATIC
     src/Engine.cpp
+    src/Log.cpp
     include/engine/Engine.h
+    include/engine/Log.h
 )
 
 target_include_directories(MyEngine PUBLIC
