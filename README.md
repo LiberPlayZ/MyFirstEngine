@@ -42,21 +42,24 @@ expands.
 ### 1. Configure CMake
 
 ``` bash
-mkdir build
-cd build
-cmake ..
+cmake -S . -B build
 ```
 
-### 2. Build
+### 2. Build (and re-build)
 
 ``` bash
-make
+cmake --build build
 ```
 
-This will produce:
+### 3. Run the example game
 
--   `MyEngine` (static library)
--   `MyGame` (executable)
+``` bash
+./build/game/MyGame
+```
+
+This sequence builds the `MyEngine` static library and links the
+`MyGame` executable against it so you can immediately see console output
+from both layers.
 
 ------------------------------------------------------------------------
 
