@@ -39,6 +39,15 @@ expands.
 
 ## 🔧 Building the Project
 
+### 0. Install dependencies (first time only)
+
+Ubuntu example:
+
+``` bash
+sudo apt update
+sudo apt install build-essential cmake libglfw3-dev
+```
+
 ### 1. Configure CMake
 
 ``` bash
@@ -60,6 +69,26 @@ cmake --build build
 This sequence builds the `MyEngine` static library and links the
 `MyGame` executable against it so you can immediately see console output
 from both layers.
+
+------------------------------------------------------------------------
+
+## 🪟 Window System
+
+The engine now owns a minimal `engine::Window` wrapper implemented with
+[GLFW](https://www.glfw.org/). The `Engine` creates a window during
+initialization, pumps events every frame, and keeps running until the
+user closes the OS window. On pure Wayland sessions, GLFW may try to use
+libdecor; either install the GTK plugin (`libdecor-0-plugin-gtk`) or
+force GLFW to use X11 via `glfwInitHint(GLFW_PLATFORM,
+GLFW_PLATFORM_X11);`. This lays the groundwork for adding an actual
+rendering backend later—swap the window wrapper once you add OpenGL,
+Vulkan, etc.
+
+Key files:
+
+-   `engine/include/engine/Window.h`
+-   `engine/src/Window.cpp`
+-   `engine/src/Engine.cpp`
 
 ------------------------------------------------------------------------
 
@@ -93,6 +122,12 @@ upgrade it (e.g., add levels, colors, or log files).
 
 -   C++20 compiler\
 -   CMake 3.20+\
+-   GLFW 3.3 development package (e.g., `sudo apt install libglfw3-dev`
+    on Ubuntu)\
+-   On modern Ubuntu/Wayland sessions, either install the libdecor GTK
+    plugin (`sudo apt install libdecor-0-0 libdecor-0-plugin-gtk`) or
+    force GLFW to use X11 (set `GLFW_PLATFORM=X11` or call
+    `glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);` before `glfwInit`)\
 -   Linux (Ubuntu) --- primary development environment\
 -   Optional: VSCode or CLion
 

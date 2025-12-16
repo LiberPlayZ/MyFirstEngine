@@ -1,7 +1,8 @@
 #include <engine/Engine.h>
 #include <engine/Log.h>
 
-int main() {
+int main()
+{
     engine::LogInfo("Game starting up...");
     engine::Engine engine;
     engine.Run();

@@ -1,20 +1,26 @@
 #pragma once
 
-namespace engine {
+#include <memory>
+#include "engine/Window.h"
 
-class Engine {
-public:
-    Engine();
+namespace engine
+{
 
-    void Run();
+    class Engine
+    {
+    public:
+        Engine();
 
-private:
-    void Initialize();
-    void Shutdown();
-    void ProcessFrame();
+        void Run();
 
-    bool m_isRunning;
-    int m_frameCount;
-};
+    private:
+        bool Initialize();
+        void Shutdown();
+        void ProcessFrame();
+
+        bool m_isRunning;
+        int m_frameCount;
+        std::unique_ptr<Window> m_window;
+    };
 
 }

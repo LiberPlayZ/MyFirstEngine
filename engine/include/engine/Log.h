@@ -2,26 +2,37 @@
 
 #include <string_view>
 
-namespace engine {
+namespace engine
+{
 
-enum class LogLevel {
-    Info,
-    Warning,
-    Error,
-};
+    enum class LogLevel
+    {
+        SUCCESS,
+        Info,
+        Warning,
+        Error,
+    };
 
-void Log(LogLevel level, std::string_view message);
+    void Log(LogLevel level, std::string_view message);
 
-inline void LogInfo(std::string_view message) {
-    Log(LogLevel::Info, message);
-}
+    inline void LogSuccess(std::string_view message)
+    {
+        Log(LogLevel::SUCCESS, message);
+    }
 
-inline void LogWarning(std::string_view message) {
-    Log(LogLevel::Warning, message);
-}
+    inline void LogInfo(std::string_view message)
+    {
+        Log(LogLevel::Info, message);
+    }
 
-inline void LogError(std::string_view message) {
-    Log(LogLevel::Error, message);
-}
+    inline void LogWarning(std::string_view message)
+    {
+        Log(LogLevel::Warning, message);
+    }
 
-}  // namespace engine
+    inline void LogError(std::string_view message)
+    {
+        Log(LogLevel::Error, message);
+    }
+
+} // namespace engine
