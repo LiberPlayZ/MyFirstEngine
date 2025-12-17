@@ -28,6 +28,10 @@ namespace engine
         std::unique_ptr<Input> m_input;
         Timer m_timer;
         float m_deltaTime;
+        float m_totalTime;
+        float m_offsetX;
+        float m_offsetY;
+        float m_moveSpeed;
     };
 
 }

@@ -20,20 +20,35 @@ scalable, modular way.
 
 ## 📁 Project Structure
 
-    MyEngine/
-     ├── engine/
-     │     ├── include/        # Public headers (engine API)
-     │     ├── src/            # Engine implementation
-     │     └── CMakeLists.txt  # Engine build rules
-     ├── game/
-     │     ├── src/            # Game/application entry point
-     │     └── CMakeLists.txt  # Game build rules
-     ├── CMakeLists.txt         # Root CMake setup
-     ├── README.md
-     └── .gitignore
+```
+first-game-engine/
+├── CMakeLists.txt
+├── engine/
+│   ├── CMakeLists.txt
+│   ├── include/engine/
+│   │   ├── Engine.h        # Engine facade
+│   │   ├── Input.h         # Keyboard wrapper (GLFW)
+│   │   ├── Log.h           # Logging helpers
+│   │   ├── Renderer.h      # OpenGL renderer
+│   │   ├── Timer.h         # High-resolution timer
+│   │   └── Window.h        # OS window abstraction
+│   └── src/
+│       ├── Engine.cpp
+│       ├── Input.cpp
+│       ├── Log.cpp
+│       ├── Renderer.cpp
+│       ├── Timer.cpp
+│       └── Window.cpp
+├── game/
+│   ├── CMakeLists.txt
+│   └── src/main.cpp        # Demo entry point
+├── resources/              # Future assets, configs, shaders
+└── README.md
+```
 
-More modules (core, renderer, math, etc.) will be added as the engine
-expands.
+Everything under `engine/` builds into the `MyEngine` static library;
+`game/` links that library and serves as the sandbox for testing new
+engine features.
 
 ------------------------------------------------------------------------
 
@@ -66,9 +81,12 @@ cmake --build build
 ./build/game/MyGame
 ```
 
-This sequence builds the `MyEngine` static library and links the
-`MyGame` executable against it so you can immediately see console output
-from both layers.
+What you should see:
+
+-   A window (1280x720) with a dark background
+-   A small triangle whose green channel pulses over time
+-   `W/A/S/D` moves the triangle, `Esc` closes the window
+-   Console logs every ~60 frames showing the measured delta time
 
 ------------------------------------------------------------------------
 
@@ -95,11 +113,12 @@ Key files:
 ## 🎨 Renderer
 
 `engine::Renderer` boots an OpenGL context (via GLFW), sets up a viewport
-that matches the window size, and clears the screen each frame. This
-module is intentionally tiny so you can focus on the integration points:
-initialization order (window → renderer), frame boundaries (`BeginFrame`
-/ `EndFrame`), and buffer swaps. As you grow the engine, you will expand
-this area with shaders, vertex buffers, and scene submission.
+that matches the window size, and now draws a tiny triangle with a
+time-varying color. The module shows the full shader/VAO/VBO pipeline so
+you can see how render state is created, uniform values are updated, and
+draw calls are submitted each frame. All OpenGL entry points are loaded
+on-demand via `glfwGetProcAddress`, so the code mirrors what larger
+engines do before delegating to a graphics abstraction layer.
 
 Key files:
 
@@ -112,11 +131,12 @@ Key files:
 ## ⏱️ Timing & Input
 
 `engine::Timer` tracks high-resolution delta time so each frame knows how
-much real time has elapsed. The engine logs this delta per frame (useful
-for spotting spikes) and will later feed it into animation/physics
-systems. `engine::Input` currently wraps basic keyboard state via GLFW;
-pressing `Esc` in the sample closes the window. As you expand, wire mouse
-movement, text input, or action-mapping tables through the same module.
+much real time has elapsed. The engine logs this delta periodically
+(useful for spotting spikes) and feeds accumulated time into the renderer
+to animate colors. `engine::Input` wraps keyboard state via GLFW; the
+sample maps `W/A/S/D` to move the triangle and `Esc` to close the window.
+As you expand, wire mouse movement, text input, or action-mapping tables
+through the same module.
 
 Key files:
 
@@ -172,14 +192,13 @@ upgrade it (e.g., add levels, colors, or log files).
 
 ## 🚧 Current Status
 
-The project is in **Step 1: CMake and project structure setup**.
-
-Next steps (coming soon):
-
--   Step 2: Create a Window with GLFW\
--   Step 3: Engine Loop\
--   Step 4: Logging System\
--   Step 5: Math Module (GLM)
+✔️ CMake project layout\
+✔️ Engine facade with window, renderer, timer, input, and logging\
+✔️ OpenGL triangle demo w/ color animation and keyboard movement\
+⬜ Platform abstraction (GLFW + other backends)\
+⬜ Math module (GLM or custom)\
+⬜ Scene graph / ECS\
+⬜ Resource management and tooling
 
 ------------------------------------------------------------------------
 
@@ -200,13 +219,16 @@ collaboration.
 
 This project follows a clear roadmap:
 
-1.  Engine bootstrap (CMake, structure)\
-2.  Windowing + Game Loop\
-3.  Rendering backend\
-4.  Input system\
-5.  ECS\
-6.  Tools / Editors
+1.  Engine bootstrap (CMake, structure) ✅\
+2.  Windowing + Game Loop ✅\
+3.  Rendering backend (in progress, OpenGL triangle demo)\
+4.  Input system ✅ (keyboard prototype)\
+5.  Math / camera / scene graph\
+6.  Asset pipeline, ECS, tools/editors
 
-Each step will be documented in detail as the project evolves.
+Each step will be documented in detail as the project evolves. If you’re
+following along, try implementing the next subsystem (e.g., a camera
+class, shader hot-reload, or a logging UI) and plug it into the
+structure shown above.
 
 ------------------------------------------------------------------------

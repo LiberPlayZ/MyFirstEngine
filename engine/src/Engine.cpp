@@ -5,6 +5,7 @@
 #include "engine/Renderer.h"
 #include "engine/Window.h"
 
+#include <algorithm>
 #include <memory>
 #include <string>
 
@@ -15,7 +16,13 @@ namespace engine
 {
 
     Engine::Engine()
-        : m_isRunning(false), m_frameCount(0), m_deltaTime(0.0f) {}
+        : m_isRunning(false),
+          m_frameCount(0),
+          m_deltaTime(0.0f),
+          m_totalTime(0.0f),
+          m_offsetX(0.0f),
+          m_offsetY(0.0f),
+          m_moveSpeed(0.5f) {}
 
     void Engine::Run()
     {
@@ -53,6 +60,9 @@ namespace engine
         m_input->Initialize(*m_window);
 
         m_timer.Reset();
+        m_totalTime = 0.0f;
+        m_offsetX = 0.0f;
+        m_offsetY = 0.0f;
 
         m_isRunning = true;
         m_frameCount = 0;
@@ -85,25 +95,52 @@ namespace engine
     {
         ++m_frameCount;
         m_deltaTime = m_timer.Tick();
-        LogInfo("Frame " + std::to_string(m_frameCount) + " dt: " + std::to_string(m_deltaTime));
+        m_totalTime += m_deltaTime;
+        if (m_frameCount % 60 == 0)
+        {
+            LogInfo("Frame " + std::to_string(m_frameCount) + " dt: " + std::to_string(m_deltaTime));
+        }
 
         if (m_window)
         {
             m_window->PollEvents();
         }
 
-        if (m_input && m_input->IsKeyPressed(GLFW_KEY_ESCAPE))
-        {
-            m_window->Close();
-        }
         if (m_input)
         {
+            if (m_input->IsKeyPressed(GLFW_KEY_ESCAPE))
+            {
+                m_window->Close();
+            }
+
+            const float moveAmount = m_moveSpeed * m_deltaTime;
+            if (m_input->IsKeyPressed(GLFW_KEY_A))
+            {
+                m_offsetX -= moveAmount;
+            }
+            if (m_input->IsKeyPressed(GLFW_KEY_D))
+            {
+                m_offsetX += moveAmount;
+            }
+            if (m_input->IsKeyPressed(GLFW_KEY_W))
+            {
+                m_offsetY += moveAmount;
+            }
+            if (m_input->IsKeyPressed(GLFW_KEY_S))
+            {
+                m_offsetY -= moveAmount;
+            }
+
+            m_offsetX = std::clamp(m_offsetX, -0.8f, 0.8f);
+            m_offsetY = std::clamp(m_offsetY, -0.8f, 0.8f);
+
             m_input->Update();
         }
 
         if (m_renderer)
         {
             m_renderer->BeginFrame();
+            m_renderer->Render(m_totalTime, m_offsetX, m_offsetY);
             m_renderer->EndFrame();
         }
 
