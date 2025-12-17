@@ -45,7 +45,7 @@ Ubuntu example:
 
 ``` bash
 sudo apt update
-sudo apt install build-essential cmake libglfw3-dev
+sudo apt install build-essential cmake libglfw3-dev mesa-common-dev
 ```
 
 ### 1. Configure CMake
@@ -92,6 +92,23 @@ Key files:
 
 ------------------------------------------------------------------------
 
+## 🎨 Renderer
+
+`engine::Renderer` boots an OpenGL context (via GLFW), sets up a viewport
+that matches the window size, and clears the screen each frame. This
+module is intentionally tiny so you can focus on the integration points:
+initialization order (window → renderer), frame boundaries (`BeginFrame`
+/ `EndFrame`), and buffer swaps. As you grow the engine, you will expand
+this area with shaders, vertex buffers, and scene submission.
+
+Key files:
+
+-   `engine/include/engine/Renderer.h`
+-   `engine/src/Renderer.cpp`
+-   `engine/src/Engine.cpp`
+
+------------------------------------------------------------------------
+
 ## 🧾 Logging
 
 The engine exposes a tiny logging helper in `engine::Log.h`. Use
@@ -128,6 +145,7 @@ upgrade it (e.g., add levels, colors, or log files).
     plugin (`sudo apt install libdecor-0-0 libdecor-0-plugin-gtk`) or
     force GLFW to use X11 (set `GLFW_PLATFORM=X11` or call
     `glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);` before `glfwInit`)\
+-   OpenGL headers/libs (e.g., `sudo apt install mesa-common-dev`)\
 -   Linux (Ubuntu) --- primary development environment\
 -   Optional: VSCode or CLion
 

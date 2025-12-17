@@ -2,6 +2,7 @@
 
 #include "engine/Log.h"
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 namespace engine
@@ -13,7 +14,9 @@ namespace engine
     }
 
     Window::Window(const WindowConfig &config)
-        : m_handle(nullptr)
+        : m_handle(nullptr),
+          m_width(config.width),
+          m_height(config.height)
     {
         Initialize(config);
     }
@@ -27,6 +30,9 @@ namespace engine
     {
         if (!g_glfwInitialized)
         {
+            // Force X11 backend on Wayland systems to avoid libdecor crashes.
+            glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+
             if (!glfwInit())
             {
                 LogError("Failed to initialize GLFW");
@@ -35,7 +41,13 @@ namespace engine
             g_glfwInitialized = true;
         }
 
-        glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    #if defined(__APPLE__)
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+    #endif
+
         m_handle = glfwCreateWindow(config.width, config.height, config.title.c_str(), nullptr, nullptr);
 
         if (!m_handle)
@@ -45,6 +57,8 @@ namespace engine
         else
         {
             LogInfo("Window created: " + config.title);
+            glfwMakeContextCurrent(m_handle);
+            glfwSwapInterval(1);
         }
     }
 
@@ -85,6 +99,11 @@ namespace engine
         {
             glfwSwapBuffers(m_handle);
         }
+    }
+
+    GLFWwindow *Window::GetNativeHandle() const
+    {
+        return m_handle;
     }
 
 } // namespace engine

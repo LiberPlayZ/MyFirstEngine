@@ -1,12 +1,11 @@
 #include "engine/Engine.h"
 
 #include "engine/Log.h"
+#include "engine/Renderer.h"
 #include "engine/Window.h"
 
-#include <chrono>
 #include <memory>
 #include <string>
-#include <thread>
 
 namespace engine
 {
@@ -39,6 +38,13 @@ namespace engine
             return false;
         }
 
+        m_renderer = std::make_unique<Renderer>();
+        if (!m_renderer->Initialize(*m_window))
+        {
+            LogError("Renderer initialization failed");
+            return false;
+        }
+
         m_isRunning = true;
         m_frameCount = 0;
         LogInfo("Engine initialized");
@@ -53,6 +59,13 @@ namespace engine
         }
 
         m_isRunning = false;
+
+        if (m_renderer)
+        {
+            m_renderer->Shutdown();
+            m_renderer.reset();
+        }
+
         m_window.reset();
         LogInfo("Engine shutdown after " + std::to_string(m_frameCount) + " frames");
     }
@@ -60,15 +73,22 @@ namespace engine
     void Engine::ProcessFrame()
     {
         ++m_frameCount;
-        LogInfo("Processing frame " + std::to_string(m_frameCount));
 
         if (m_window)
         {
             m_window->PollEvents();
-            m_window->SwapBuffers();
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        if (m_renderer)
+        {
+            m_renderer->BeginFrame();
+            m_renderer->EndFrame();
+        }
+
+        if (m_window)
+        {
+            m_window->SwapBuffers();
+        }
     }
 
 } // namespace engine

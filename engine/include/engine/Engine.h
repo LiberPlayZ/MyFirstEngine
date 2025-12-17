@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "engine/Renderer.h"
 #include "engine/Window.h"
 
 namespace engine
@@ -21,6 +22,7 @@ namespace engine
         bool m_isRunning;
         int m_frameCount;
         std::unique_ptr<Window> m_window;
+        std::unique_ptr<Renderer> m_renderer;
     };
 
 }

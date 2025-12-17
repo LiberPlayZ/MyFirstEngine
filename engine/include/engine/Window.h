@@ -21,12 +21,17 @@ public:
     bool ShouldClose() const;
     void PollEvents();
     void SwapBuffers();
+    GLFWwindow* GetNativeHandle() const;
+    int GetWidth() const { return m_width; }
+    int GetHeight() const { return m_height; }
 
 private:
     void Initialize(const WindowConfig& config);
     void Shutdown();
 
     GLFWwindow* m_handle;
+    int m_width;
+    int m_height;
 };
 
 }  // namespace engine
