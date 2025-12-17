@@ -109,6 +109,25 @@ Key files:
 
 ------------------------------------------------------------------------
 
+## ⏱️ Timing & Input
+
+`engine::Timer` tracks high-resolution delta time so each frame knows how
+much real time has elapsed. The engine logs this delta per frame (useful
+for spotting spikes) and will later feed it into animation/physics
+systems. `engine::Input` currently wraps basic keyboard state via GLFW;
+pressing `Esc` in the sample closes the window. As you expand, wire mouse
+movement, text input, or action-mapping tables through the same module.
+
+Key files:
+
+-   `engine/include/engine/Timer.h`
+-   `engine/src/Timer.cpp`
+-   `engine/include/engine/Input.h`
+-   `engine/src/Input.cpp`
+-   `engine/src/Engine.cpp`
+
+------------------------------------------------------------------------
+
 ## 🧾 Logging
 
 The engine exposes a tiny logging helper in `engine::Log.h`. Use

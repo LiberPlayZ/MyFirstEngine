@@ -3,13 +3,12 @@ find_package(glfw3 3.3 REQUIRED)
 
 add_library(MyEngine STATIC
     src/Engine.cpp
+    src/Input.cpp
     src/Log.cpp
     src/Renderer.cpp
+    src/Timer.cpp
     src/Window.cpp
-    include/engine/Engine.h
-    include/engine/Log.h
-    include/engine/Renderer.h
-    include/engine/Window.h
+
 )
 
 target_include_directories(MyEngine PUBLIC

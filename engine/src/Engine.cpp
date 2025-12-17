@@ -1,5 +1,6 @@
 #include "engine/Engine.h"
 
+#include "engine/Input.h"
 #include "engine/Log.h"
 #include "engine/Renderer.h"
 #include "engine/Window.h"
@@ -7,11 +8,14 @@
 #include <memory>
 #include <string>
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 namespace engine
 {
 
     Engine::Engine()
-        : m_isRunning(false), m_frameCount(0) {}
+        : m_isRunning(false), m_frameCount(0), m_deltaTime(0.0f) {}
 
     void Engine::Run()
     {
@@ -45,6 +49,11 @@ namespace engine
             return false;
         }
 
+        m_input = std::make_unique<Input>();
+        m_input->Initialize(*m_window);
+
+        m_timer.Reset();
+
         m_isRunning = true;
         m_frameCount = 0;
         LogInfo("Engine initialized");
@@ -66,6 +75,8 @@ namespace engine
             m_renderer.reset();
         }
 
+        m_input.reset();
+
         m_window.reset();
         LogInfo("Engine shutdown after " + std::to_string(m_frameCount) + " frames");
     }
@@ -73,10 +84,21 @@ namespace engine
     void Engine::ProcessFrame()
     {
         ++m_frameCount;
+        m_deltaTime = m_timer.Tick();
+        LogInfo("Frame " + std::to_string(m_frameCount) + " dt: " + std::to_string(m_deltaTime));
 
         if (m_window)
         {
             m_window->PollEvents();
+        }
+
+        if (m_input && m_input->IsKeyPressed(GLFW_KEY_ESCAPE))
+        {
+            m_window->Close();
+        }
+        if (m_input)
+        {
+            m_input->Update();
         }
 
         if (m_renderer)

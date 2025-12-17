@@ -93,17 +93,25 @@ namespace engine
         glfwPollEvents();
     }
 
-    void Window::SwapBuffers()
+void Window::SwapBuffers()
+{
+    if (m_handle)
     {
-        if (m_handle)
-        {
-            glfwSwapBuffers(m_handle);
-        }
+        glfwSwapBuffers(m_handle);
     }
+}
 
-    GLFWwindow *Window::GetNativeHandle() const
+void Window::Close()
+{
+    if (m_handle)
     {
-        return m_handle;
+        glfwSetWindowShouldClose(m_handle, GLFW_TRUE);
     }
+}
+
+GLFWwindow *Window::GetNativeHandle() const
+{
+    return m_handle;
+}
 
 } // namespace engine
